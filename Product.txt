@@ -1,0 +1,260 @@
+mysql> create table product(pid int primary key,pname varchar(30),pquant int,price double);
+
+
+package com.day15;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Example4 {
+
+	public static void main(String[] args) {
+		Scanner s=new Scanner(System.in);
+		System.out.println("PRODUCT DETAILS");
+		int choose;
+		do {
+			System.out.println("1. Insert Employee");
+			System.out.println("2. Update Employee");
+			System.out.println("3. Delete Employee");
+			System.out.println("4. Select Employee");
+			System.out.println("5. Exit");
+			choose=Integer.parseInt(s.nextLine());
+			switch(choose) {
+			case 1:
+				System.out.println("Enter Product ID");
+				int pid=Integer.parseInt(s.nextLine());
+				System.out.println("Enter Product name");
+				String pname=s.nextLine();
+				System.out.println("Enter Quantity of the Product recived");
+				int pquant=Integer.parseInt(s.nextLine());
+				System.out.println("Enter Product Price");
+				double price=Double.parseDouble(s.nextLine());
+				/*Random r=new Random();
+				int pid=r.nextInt(99999)+100000;*/
+				Connection con=null;
+				try {
+					con=ConnectionUtil.getConnection();
+					PreparedStatement ps=con.prepareStatement("insert into product values(?,?,?,?)");
+					ps.setInt(1, pid);
+					ps.setString(2,pname);
+					ps.setInt(3, pquant);
+					ps.setDouble(4, price);
+					int no_Of_Rows=ps.executeUpdate();
+					if(no_Of_Rows==1)
+						System.out.println("Product record inserted Sucessfully");
+				}
+				catch(Exception e) {
+					System.out.println(e);
+				}
+				finally{
+					if(con!=null)
+						try {
+							con.close();
+						}
+						catch(SQLException e) {
+							e.printStackTrace();
+						}
+				}
+				break;
+			case 2:
+				System.out.println("Enter Product ID");
+				int pid1=Integer.parseInt(s.nextLine());
+				System.out.println("Enter Product name");
+				String pname1=s.nextLine();
+				System.out.println("Enter Quantity of the Product recived");
+				int pquant1=Integer.parseInt(s.nextLine());
+				System.out.println("Enter Product Price");
+				double price1=Double.parseDouble(s.nextLine());
+				Connection con1=null;
+				try {
+					con1=ConnectionUtil.getConnection();
+					PreparedStatement ps1=con1.prepareStatement("update product set pname=?,pquant=?,price=? where pid=?");
+					ps1.setInt(1, pid1);
+					ps1.setString(2, pname1);
+					ps1.setInt(3, pquant1);
+					ps1.setDouble(4, price1);
+					int rows=ps1.executeUpdate();
+					if(rows==1) {
+						System.out.println("Product record updated successfully");
+					}
+				}
+				catch(Exception e) {
+					System.out.println(e);
+				}
+				finally {
+					if(con1!=null)
+						try {
+							con1.close();
+						}
+						catch(SQLException e) {
+							e.printStackTrace();
+						}
+				}
+				break;
+			case 3:
+				System.out.println("Enter Product id");
+				int pid2=Integer.parseInt(s.nextLine());
+				Connection con2=null;
+				try {
+					con2=ConnectionUtil.getConnection();
+					PreparedStatement ps2=con2.prepareStatement("delete from product where pid=?");
+					ps2.setInt(1, pid2);
+					int deleteRow=ps2.executeUpdate();
+					if(deleteRow==1)
+						System.out.println("Product Record deleted successfully");
+				}
+				catch(Exception e) {
+				
+				}
+				finally {
+					if(con2!=null)
+						try {
+							con2.close();
+						}
+						catch(SQLException e) {
+							e.printStackTrace();
+						}
+				}
+
+				break;
+			case 4:
+				Connection con3=null;
+				try {
+					con3=ConnectionUtil.getConnection();
+					Statement st=con3.createStatement();
+					ResultSet rs=st.executeQuery("select * from product");
+					List<Product> l=new ArrayList<>();
+					while(rs.next()) {
+						Product prd=new Product();
+						prd.setPid(rs.getInt(1));
+						prd.setPname(rs.getString(2));
+						prd.setPquant(rs.getInt(3));
+						prd.setPrice(rs.getDouble(4));
+						l.add(prd);
+					}
+					System.out.printf("%15s %25s %10s %25s","ProductID","ProductName","Quantity","Price\n");
+					
+					for (Product prdl:l) {
+						System.out.printf("%15s %25s %10s %25s\n",prdl.getPid(),prdl.getPname(),prdl.getPquant(),prdl.getPrice());
+						
+					}
+					
+				}
+				catch(Exception e) {
+		
+				}
+				finally {
+					if(con3!=null)
+						try {
+							con3.close();
+						}
+						catch(SQLException e) {
+							e.printStackTrace();
+						}
+				}
+				break;
+			case 5:
+				System.exit(0);
+				break;
+			}
+		}
+		while(choose<5);
+	}
+
+}
+
+
+PRODUCT DETAILS
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+3
+Enter Product id
+245
+Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
+Product Record deleted successfully
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+1
+Enter Product name
+Biscuit
+Enter Quantity of the Product recived
+100
+Enter Product Price
+15
+Product record inserted Sucessfully
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+1
+Enter Product name
+Bag
+Enter Quantity of the Product recived
+50
+Enter Product Price
+1500
+Product record inserted Sucessfully
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+1
+Enter Product name
+Chocolate
+Enter Quantity of the Product recived
+100
+Enter Product Price
+50
+Product record inserted Sucessfully
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+2
+Enter Product ID
+189220
+Enter Product name
+Phone
+Enter Quantity of the Product recived
+10
+Enter Product Price
+15000
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+3
+Enter Product id
+189220
+Product Record deleted successfully
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+4
+      ProductID               ProductName   Quantity                    Price
+         101929                       Bag         50                    1500.0
+         132444                   Biscuit        100                      15.0
+1. Insert Employee
+2. Update Employee
+3. Delete Employee
+4. Select Employee
+5. Exit
+5
